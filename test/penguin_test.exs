@@ -31,8 +31,6 @@ defmodule PenguinTest do
     def valid_user_states, do: :public
   end
 
-  :signed_in
-
   defmodule SubjectProtectedController do
     use Penguin.Controller
 

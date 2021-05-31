@@ -10,7 +10,9 @@ defmodule Penguin.RouteMaster do
     quote do
       match unquote(path_matcher), via: unquote(method) do
         conn = var!(conn)
-        untrusted_input = Map.take(conn, [:req_headers, :body, :path_params, :query_params])
+
+        untrusted_input =
+          Map.take(conn, [:req_headers, :body_params, :path_params, :query_params])
 
         with {:ok, :valid_user_state, actual_user_state} <-
                Penguin.RouteMaster.validate_user_state(
