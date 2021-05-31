@@ -12,12 +12,50 @@ end
 
 ### In controller
 ```elixir
-defmodule SignUp do
+defmodule DoSomething do
   use Penguin.Controller
 
-  
+  embedded_schema do
+    field(:title, :string)
+  end
+
+  @impl true
+  def validation_changeset(%{query_params: params}) do
+    %__MODULE__{}
+    |> Ecto.Changeset.cast(params, [:title])
+    |> Ecto.Changeset.validate_required([:title])
+  end
+
+  @impl true
+  def handle(conn, %PenguinTest.SubjectController{title: _title}, _user_state) do
+    send_resp(conn, 200, "hello world")
+  end
+
+  @impl true
+  def valid_user_states, do: :public
 end
 ```
+
+or without validation but with user status check
+```elixir
+defmodule DoSomething do
+  use Penguin.Controller
+
+  @impl true
+  def validate(_input) do
+    {:ok, %{}}
+  end
+
+  @impl true
+  def handle(conn, _input, _user_state) do
+    send_resp(conn, 200, "OK")
+  end
+
+  @impl true
+  def valid_user_states, do: [:signed_in]
+end
+```
+
 
 ## Installation
 
